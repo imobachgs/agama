@@ -154,7 +154,7 @@ async fn run_command(cli: Cli) -> Result<(), ServiceError> {
         Commands::Logs(subcommand) => run_logs_cmd(subcommand).await?,
         Commands::Download { url } => crate::profile::download(&url, std::io::stdout())?,
         Commands::Auth(subcommand) => {
-            let mut client = BaseHTTPClient::bare()?;
+            let mut client = BaseHTTPClient::default();
 
             client.base_url = cli
                 .opts
