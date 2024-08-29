@@ -134,10 +134,9 @@ async fn build_manager<'a>() -> anyhow::Result<ManagerClient<'a>> {
 async fn run_command(cli: Cli) -> Result<(), ServiceError> {
     // we need to distinguish commands on those which assume that authentication JWT is already
     // available and those which not (or don't need it)
-    let mut client = if matches!(cli.command, Commands::Auth(_)) {
+    let mut client = if let Commands::Auth(_) = cli.command {
         BaseHTTPClient::default()
-    }
-    else {
+    } else {
         // this deals with authentication need inside
         BaseHTTPClient::new()?
     };
@@ -150,9 +149,7 @@ async fn run_command(cli: Cli) -> Result<(), ServiceError> {
         .to_string();
 
     match cli.command {
-        Commands::Config(subcommand) => {
-            run_config_cmd(client, subcommand).await?
-        }
+        Commands::Config(subcommand) => run_config_cmd(client, subcommand).await?,
         Commands::Probe => {
             let manager = build_manager().await?;
             wait_for_services(&manager).await?;
