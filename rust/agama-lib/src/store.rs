@@ -31,9 +31,9 @@ impl<'a> Store<'a> {
         http_client: BaseHTTPClient,
     ) -> Result<Store<'a>, ServiceError> {
         Ok(Self {
-            localization: LocalizationStore::new()?,
+            localization: LocalizationStore::new(http_client.clone())?,
             users: UsersStore::new()?,
-            network: NetworkStore::new(http_client).await?,
+            network: NetworkStore::new(http_client.clone()).await?,
             product: ProductStore::new(connection.clone()).await?,
             software: SoftwareStore::new(connection.clone()).await?,
             storage: StorageStore::new(connection).await?,
